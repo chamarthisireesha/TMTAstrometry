@@ -102,4 +102,4 @@ def diff_fie(global_inputs,field,sigma_sci,sigma_field,sigma_ref,sigma_NGS):
 						'Total plate scale error': sigma_ref['Reference obj n catalog errors']['Subtotal'],
 						'Astrometry error': astrometry_error}
 
-	return [error_subtotals]
+	return error_subtotals

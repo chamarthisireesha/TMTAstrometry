@@ -899,7 +899,13 @@ def update_output_div(n_clicks,wavelength,SNR_sci,SNR_fie,SNR_ref,rNGS,rref,T,dt
     RefObjNCatErr['Other'] = other
 
     # send the unpdated inputs to calculate the astrometry error
-    Final_error=0
+    Final_error = { 'Focal-plane measurement errors': 0,
+                        'Opto-mechanical errors': 0,
+                        'Atmospheric refraction errors': 0,
+                        'Residual turbulence errors': 0,
+                        'Pixel coordinate error': 0,
+                        'Total plate scale error': 0,
+                        'Astrometry error': 0}
     if int(n_clicks)>=1:
         Final_error = Error_calculator(global_inputs,field,sigma_sci,sigma_NGS,RefObjNCatErr,astrometry_type)
     return 'Final astrometry error is {} µas'.format(Final_error['Astrometry error'])
