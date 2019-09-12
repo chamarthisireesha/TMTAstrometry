@@ -12,7 +12,7 @@ from dash.dependencies import Input, Output, State
 from inputs import *
 from error_calculator import Error_calculator
 
-print(dcc.__version__) # 0.6.0 or above is required
+# print(dcc.__version__) # 0.6.0 or above is required
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
