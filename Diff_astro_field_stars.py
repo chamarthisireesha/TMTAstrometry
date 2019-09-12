@@ -1,68 +1,105 @@
 # Calculate differential astrometry error using field objects.
-from inputs import fred
-import formulae as f
-import math
-def diff_ref(global_inputs,field,sigma_x,sigma_t):
-	noise_err = f.D2(sigma_x['Focal-plane measurement errors']['Noise'],sigma_x['Focal-plane measurement errors']['Noise'],field,fred)
-	noise_cal_err = f.D2(sigma_x['Focal-plane measurement errors']['Noise calibration errors'],sigma_x['Focal-plane measurement errors']['Noise calibration errors'],field,fred)
-	pix_blur = f.D2(sigma_x['Focal-plane measurement errors']['Pixel blur'],sigma_x['Focal-plane measurement errors']['Pixel blur'],field,fred)
-	pix_irr = f.D2(sigma_x['Focal-plane measurement errors']['Pixel irregularities'],sigma_x['Focal-plane measurement errors']['Pixel irregularities'],field,fred)
-	det_nl = f.D2(sigma_x['Focal-plane measurement errors']['Detector non-linearity'],sigma_x['Focal-plane measurement errors']['Detector non-linearity'],field,fred)
-	PSF_rec = f.D2(sigma_x['Focal-plane measurement errors']['PSF reconstruction'],sigma_x['Focal-plane measurement errors']['PSF reconstruction'],field,fred)
-	conf_err = f.D2(sigma_x['Focal-plane measurement errors']['Confusion'],sigma_x['Focal-plane measurement errors']['Confusion'],field,fred)
+# from inputs import fred
+# import formulae as f
+def diff_fie(global_inputs,field,sigma_sci,sigma_field,sigma_ref,sigma_NGS):
+	
+	## field density dependent calculations
 
-	FP_err = noise_err + noise_cal_err + pix_blur + pix_irr + det_nl + PSF_rec + conf_err
-	# print(math.sqrt(FP_err))
+	# Confusion 0 for spare fields
+	if field['Nref'] < 6:
+		sigma_field['Focal-plane measurement errors']['Confusion'] = 0
+		sigma_sci['Focal-plane measurement errors']['Confusion'] = 0
 
-	if field['Nref'] < 3: 
-		NGS_pos_err = f.PS1(sigma_t['Opto-mechanical errors']['NGS position errors'],field,global_inputs)
-	elif field['Nref'] >= 3:
-		NGS_pos_err = 0
-	NF_IR_optics = f.D2(sigma_x['Opto-mechanical errors']['NFIAROS_IRIS optics'],sigma_x['Opto-mechanical errors']['NFIAROS_IRIS optics'],field,fred)
-	NF_IR_SFE = f.D2(sigma_x['Opto-mechanical errors']['NFIAROS_IRIS surfaces'],sigma_x['Opto-mechanical errors']['NFIAROS_IRIS surfaces'],field,fred)
-	QS_dist = f.D2(sigma_x['Opto-mechanical errors']['Quasi_static distortions'],sigma_x['Opto-mechanical errors']['Quasi_static distortions'],field,fred)
-	tel_opt = f.D2(sigma_x['Opto-mechanical errors']['Telescope optics'],sigma_x['Opto-mechanical errors']['Telescope optics'],field,fred)
-	rot_err = f.D2(sigma_x['Opto-mechanical errors']['Rotator errors'],sigma_x['Opto-mechanical errors']['Rotator errors'],field,fred)
-	Act_spikes = f.D2(sigma_x['Opto-mechanical errors']['Actuators diffr spikes'],sigma_x['Opto-mechanical errors']['Actuators diffr spikes'],field,fred)
-	Vib_err = f.D2(sigma_x['Opto-mechanical errors']['Vibrations'],sigma_x['Opto-mechanical errors']['Vibrations'],field,fred)
-	cop_atm_eff = f.D2(sigma_x['Opto-mechanical errors']['Coupling atm effects'],sigma_x['Opto-mechanical errors']['Coupling atm effects'],field,fred)
+	# NGS position error for ref stars less than 3
+	if field['Nref'] < 3:
+		sigma_field['Opto-mechanical errors']['NGS position errors'] = sigma_NGS['Opto-mechanical errors']['NGS position errors']*field['rref-sci']/global_inputs['rngs']
+	# ref stars 3 or more
+	if field['Nref'] >=3:
+		sigma_field['Opto-mechanical errors']['NGS Position errors'] = 0
 
-	opt_mech_err =NGS_pos_err+  NF_IR_optics + NF_IR_SFE + QS_dist + tel_opt + rot_err + Act_spikes + Vib_err + cop_atm_eff
-	# print(math.sqrt(opt_mech_err))
+	# Halo effect for spares field is 0
+	if field['Nref']<6:
+		sigma_field['Residual turbulence errors']['Halo effect'] = 0
 
-	achr_diff_ref = f.D2(sigma_x['Atmospheric refraction errors']['Achromatic differential refraction'],sigma_x['Atmospheric refraction errors']['Achromatic differential refraction'],field,fred)
-	DSO_err = f.D2(sigma_x['Atmospheric refraction errors']['Dispersion obj spectra'],sigma_x['Atmospheric refraction errors']['Dispersion obj spectra'],field,fred)
-	DAC_err = f.D2(sigma_x['Atmospheric refraction errors']['Dispersion atm conditions'],sigma_x['Atmospheric refraction errors']['Dispersion atm conditions'],field,fred)
-	DADC_pos = f.D2(sigma_x['Atmospheric refraction errors']['Dispersion ADC position'],sigma_x['Atmospheric refraction errors']['Dispersion ADC position'],field,fred)
-	Disp_var = f.D2(sigma_x['Atmospheric refraction errors']['Dispersion variability'],sigma_x['Atmospheric refraction errors']['Dispersion variability'],field,fred)
-
-	Atm_ref_err = achr_diff_ref + DSO_err + DAC_err + DADC_pos + Disp_var
-	# print(math.sqrt(Atm_ref_err))
-	if field['Nref'] <3:
-		Diff_TTJ_PS = f.D1(sigma_x['Residual turbulence errors']['Diff TTJ plate scale'],sigma_x['Residual turbulence errors']['Diff TTJ plate scale'],field,field['rsep']/28)
-	elif field['Nref'] >=3:
-		Diff_TTJ_PS = 0
-
-	Diff_TTJ_HO = f.D2(sigma_x['Residual turbulence errors']['Diff TTJ higher order'],sigma_x['Residual turbulence errors']['Diff TTJ higher order'],field,fred)
-	PSF_irr = f.D2(sigma_x['Residual turbulence errors']['PSF irregularities'],sigma_x['Residual turbulence errors']['PSF irregularities'],field,fred)
-	PSF_HE = f.D2(sigma_x['Residual turbulence errors']['Halo effect'],sigma_x['Residual turbulence errors']['Halo effect'],field,fred)
-#	TC_var = f.D2(sigma_x['Residual turbulence errors']['Turb conditions variability'],sigma_x['Residual turbulence errors']['Turb conditions variability'],field,fred)
-
-	Res_turb_err = Diff_TTJ_PS + Diff_TTJ_HO + PSF_irr + PSF_HE 
-	# print(math.sqrt(Res_turb_err))
-
+	# proper motion error for very spare fields
 	if field['Nref']<3:
-		pos_err = f.PS1(sigma_t['Reference obj n catalog errors']['Position errors'],field,global_inputs)
-		PM_err = f.PS1(sigma_t['Reference obj n catalog errors']['Proper motion errors'],field,global_inputs)
-		Abr_grav_err = f.PS1(sigma_t['Reference obj n catalog errors']['Aberration grav deflection'],field,global_inputs)
-		other_err = f.PS1(sigma_t['Reference obj n catalog errors']['Other'],field,global_inputs)
-	elif field['Nref']>=3:
-		pos_err = f.PS2(sigma_t['Reference obj n catalog errors']['Position errors'],field,global_inputs)
-		PM_err = f.PS2(sigma_t['Reference obj n catalog errors']['Proper motion errors'],field,global_inputs)
-		Abr_grav_err = f.PS2(sigma_t['Reference obj n catalog errors']['Aberration grav deflection'],field,global_inputs)
-		other_err = f.PS2(sigma_t['Reference obj n catalog errors']['Other'],field,global_inputs)
+		sigma_ref['Reference obj n catalog errors']['Position errors'] = 0
 
-	ref_obj_cat_err = pos_err + PM_err + Abr_grav_err + other_err
-	# print(ref_obj_cat_err)
 
-	return math.sqrt(FP_err + opt_mech_err + Atm_ref_err + Res_turb_err + ref_obj_cat_err)
+
+	## quarature subtotal of errors for field stars,ref stars and science object
+	for m, n in sigma_sci.items(): # sigma sci
+		subtotal = 0
+		err = 0
+		for l in n:
+			err = sigma_sci[m][l]
+			subtotal = subtotal+err**2
+
+		sigma_sci[m]['Subtotal'] = (subtotal)**0.5
+
+	for m, n in sigma_field.items(): # sigma field
+		subtotal = 0
+		err = 0
+		for l in n:
+			err = sigma_field[m][l]/((field['Nfield'])**0.5)
+			subtotal = subtotal+err**2
+
+		sigma_field[m]['Subtotal'] = (subtotal)**0.5
+		sigma_field[m]['Subtotal'] = (sigma_field[m]['Subtotal']**2 + sigma_sci[m]['Subtotal']**2)**0.5
+
+
+
+	for m, n in sigma_ref.items(): # sigma ref
+		subtotal = 0
+		err = 0
+		for l in n:
+			err = sigma_ref[m][l]
+			subtotal = subtotal+err**2
+
+		sigma_ref[m]['Subtotal'] = (subtotal)**0.5
+
+	# Measurement uncertainty
+	meas_unc = (sigma_ref['Focal-plane measurement errors']['Subtotal']**2 + sigma_ref['Opto-mechanical errors']['Subtotal']**2  + sigma_ref['Atmospheric refraction errors']['Subtotal']**2 + sigma_ref['Residual turbulence errors']['Subtotal']**2)**0.5
+	sigma_ref['Reference obj n catalog errors']['Measurement Uncertainty'] = meas_unc
+	sigma_ref['Reference obj n catalog errors']['Subtotal'] = 0
+	# ref object errors for sparse fields
+	subtotal = 0
+	err=0
+	if field['Nref']<3:
+		for l in sigma_ref['Reference obj n catalog errors']:
+			if l == 'Measurement Uncertainty':
+				err = sigma_ref['Reference obj n catalog errors'][l]/(field['Nref'])**0.5
+			else:
+				err = sigma_ref['Reference obj n catalog errors'][l]
+			subtotal = subtotal+err**2
+
+
+	# ref object errors for dense fields
+	if field['Nref']>=3:
+		for l in sigma_ref['Reference obj n catalog errors']:
+			if l == 'Measurement Uncertainty':
+				err = sigma_ref['Reference obj n catalog errors'][l]/(field['Nref'])**0.5
+			else:
+				err = sigma_ref['Reference obj n catalog errors'][l]*((3/field['Nref'])**0.5)*field['rdref']/global_inputs['rref']
+			subtotal = subtotal+err**2
+
+	sigma_ref['Reference obj n catalog errors']['Subtotal'] = (subtotal)**0.5
+
+	pixel_error = 0
+	for l in sigma_field:
+		pixel_error = sigma_field[l]['Subtotal']**2 + pixel_error
+
+	pixel_error = pixel_error**0.5
+
+	## total astrometry error 
+	astrometry_error = (pixel_error**2 + sigma_ref['Reference obj n catalog errors']['Subtotal']**2)**0.5
+
+	error_subtotals ={ 'Focal-plane measurement errors': sigma_field['Focal-plane measurement errors']['Subtotal'],
+						'Opto-mechanical errors': sigma_field['Opto-mechanical errors']['Subtotal'],
+						'Atmospheric refraction errors': sigma_field['Atmospheric refraction errors']['Subtotal'],
+						'Residual turbulence errors':sigma_field['Residual turbulence errors']['Subtotal'],
+						'Pixel coordinate error': pixel_error,
+						'Total plate scale error': sigma_ref['Reference obj n catalog errors']['Subtotal'],
+						'Astrometry error': astrometry_error}
+
+	return [error_subtotals]
