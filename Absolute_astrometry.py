@@ -11,6 +11,7 @@ import math
 
 def abs_astrometry(global_inputs,field,sigma_sci,sigma_field,sigma_ref,sigma_NGS):
 	sigma_sci['Residual turbulence errors']['Diff TTJ plate scale'] = 150/(global_inputs['T'])**0.5
+	field['rsep'] = field['rdref']
 	
 	if field['Nref']<3:
 		noise_err = f.A2(sigma_sci['Focal-plane measurement errors']['Noise'])

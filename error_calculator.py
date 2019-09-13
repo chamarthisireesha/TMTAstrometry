@@ -38,6 +38,7 @@ def Error_calculator(global_inputs,field,sigma_sci,sigma_NGS,RefObjNCatErr,astro
 		error = abs_astrometry(global_inputs,field,sigma_sci,sigma_field,sigma_ref,sigma_NGS)
 	else:
 		print('No option selected. Something went wrong')
+	# print(error)
 	return error
 
 

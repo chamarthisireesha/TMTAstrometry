@@ -11,6 +11,8 @@ import math
 def diff_sci(global_inputs,field,sigma_sci,sigma_field,sigma_ref,sigma_NGS):
 
 	sigma_sci['Residual turbulence errors']['Diff TTJ plate scale'] = 150/(global_inputs['T'])**0.5
+	field['rsep'] = field['rref-sci']
+
 
 	noise_err = f.D1(sigma_sci['Focal-plane measurement errors']['Noise'],sigma_sci['Focal-plane measurement errors']['Noise'],field,fred)
 	noise_cal_err = f.D1(sigma_sci['Focal-plane measurement errors']['Noise calibration errors'],sigma_sci['Focal-plane measurement errors']['Noise calibration errors'],field,fred)
@@ -22,6 +24,7 @@ def diff_sci(global_inputs,field,sigma_sci,sigma_field,sigma_ref,sigma_NGS):
 
 	FP_err = noise_err + noise_cal_err + pix_blur + pix_irr + det_nl + PSF_rec + conf_err
 	sigma_field['Focal-plane measurement errors']['Subtotal'] = math.sqrt(FP_err)
+
 
 	if field['Nref'] < 3: 
 		NGS_pos_err = f.PS1(sigma_NGS['Opto-mechanical errors']['NGS position errors'],field,global_inputs)
