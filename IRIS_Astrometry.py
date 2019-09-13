@@ -43,7 +43,7 @@ app.config.suppress_callback_exceptions = True
 app.layout = html.Div(children=[
      
     html.Div([
-    html.H1('TMT-IRIS ASTROMETRY ERROR BUDGET TOOL' ,
+    html.H1('TMT-IRIS Astrometry Error Budget Tool' ,
     style={'color': 'white', 'font-style': 'italic', 'font-weight': 'bold','textAlign':'center'}
     ),
 
@@ -71,8 +71,8 @@ app.layout = html.Div(children=[
     # html.Div(id='blankspace1-id',
     #     style={'width': '30%', 'float':'center', 'display': 'inline-block'}),
     
-    html.Button(id = 'Calculate',n_clicks=0,children='Calculate', style={'width': '10%','backgroundColor': 'white','opacity': '1','font-weight': 'bold','color': 'black', 'float':'right', 'display': 'inline-block','margin-left': '50px','margin-right': '150px','margin-top': '-50px'}),
-               
+	html.Button(id = 'Calculate',n_clicks=0,children='Calculate', style={'width': '10%','backgroundColor': 'white','opacity': '1','font-weight': 'bold','color': 'black', 'float':'right', 'display': 'inline-block','margin-left': '10px','margin-right': '150px','margin-top': '20px'}),
+                  
                
 ############################3tabs############################################
              
