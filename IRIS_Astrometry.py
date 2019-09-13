@@ -1106,7 +1106,10 @@ def update_figure(n_clicks,wavelength,SNR_sci,SNR_fie,SNR_ref,rNGS,rref,T,dt,Nsc
                 global_inputs['SNR_sci'] = f(x,T)
                 # print x,T,f(x,T)
                 err=Error_calculator(global_inputs,field,sigma_sci,sigma_NGS,RefObjNCatErr,astrometry_type)
-                y_arr.append(err['Astrometry error'][0])
+                if astrometry_type == 'Differential astrometry (relative to field stars)':
+                    y_arr.append(err['Astrometry error'][0])
+                else:
+                    y_arr.append(err['Astrometry error'])
     traces = []
     traces.append(go.Scatter(
                 x=x_arr,
