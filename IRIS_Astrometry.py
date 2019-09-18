@@ -558,8 +558,10 @@ app.layout = html.Div(children=[
         style={'textAlign': 'center','margin-left': '70px','width':'70%'}),
           
                  ]),
+
+        ### Residual Turbulance
                   
-                   html.H5(children='Residual Turbulance',
+        html.H5(children='Residual Turbulance',
             style={ 'backgroundColor': '#FFFFFF','textAlign': 'center','font-weight': 'bold','color':'black'},
                ),
        
@@ -947,11 +949,17 @@ def update_output_div(n_clicks,wavelength,SNR_sci,SNR_fie,SNR_ref,rNGS,rref,T,dt
     field['rdref'] = rdsci
 
     sigma_sci['Focal-plane measurement errors']['Noise calibration errors'] = Ncal
+    type(sigma_sci['Focal-plane measurement errors']['Noise calibration errors'])
     sigma_sci['Focal-plane measurement errors']['Pixel blur'] = pix_blur
+    type(sigma_sci['Focal-plane measurement errors']['Pixel blur'])
     sigma_sci['Focal-plane measurement errors']['Pixel irregularities'] = pix_irr
+    type(sigma_sci['Focal-plane measurement errors']['Pixel irregularities'])
     sigma_sci['Focal-plane measurement errors']['Detector non-linearity'] = dect_non
+    type(sigma_sci['Focal-plane measurement errors']['Detector non-linearity'])
     sigma_sci['Focal-plane measurement errors']['PSF reconstruction'] = PSF
+    type(sigma_sci['Focal-plane measurement errors']['PSF reconstruction'])
     sigma_sci['Focal-plane measurement errors']['Confusion'] = confusion
+    type(sigma_sci['Focal-plane measurement errors']['Confusion'])
 
     sigma_NGS['Opto-mechanical errors']['NGS position errors'] = NGS_perr
 
@@ -1106,10 +1114,10 @@ def update_figure(n_clicks,wavelength,SNR_sci,SNR_fie,SNR_ref,rNGS,rref,T,dt,Nsc
                 global_inputs['SNR_sci'] = f(x,T)
                 # print x,T,f(x,T)
                 err=Error_calculator(global_inputs,field,sigma_sci,sigma_NGS,RefObjNCatErr,astrometry_type)
-                if astrometry_type == 'Differential astrometry (relative to field stars)':
-                    y_arr.append(err['Astrometry error'][0])
-                else:
-                    y_arr.append(err['Astrometry error'])
+                # if astrometry_type == 'Differential astrometry (relative to field stars)':
+                #     y_arr.append(err['Astrometry error'][0])
+                # else:
+                y_arr.append(err['Astrometry error'])
     traces = []
     traces.append(go.Scatter(
                 x=x_arr,

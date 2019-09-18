@@ -1,6 +1,7 @@
 # Calculate differential astrometry error using field objects.
 # from inputs import fred
 # import formulae as f
+import math
 def diff_fie(global_inputs,field,sigma_sci,sigma_field,sigma_ref,sigma_NGS):
 	
 	## field density dependent calculations
@@ -94,12 +95,12 @@ def diff_fie(global_inputs,field,sigma_sci,sigma_field,sigma_ref,sigma_NGS):
 	## total astrometry error 
 	astrometry_error = (pixel_error**2 + sigma_ref['Reference obj n catalog errors']['Subtotal']**2)**0.5
 
-	error_subtotals ={ 'Focal-plane measurement errors': sigma_field['Focal-plane measurement errors']['Subtotal'],
-						'Opto-mechanical errors': sigma_field['Opto-mechanical errors']['Subtotal'],
-						'Atmospheric refraction errors': sigma_field['Atmospheric refraction errors']['Subtotal'],
-						'Residual turbulence errors':sigma_field['Residual turbulence errors']['Subtotal'],
-						'Pixel coordinate error': pixel_error,
-						'Total plate scale error': sigma_ref['Reference obj n catalog errors']['Subtotal'],
-						'Astrometry error': astrometry_error}
+	error_subtotals ={ 'Focal-plane measurement errors': math.sqrt(sigma_field['Focal-plane measurement errors']['Subtotal']*sigma_field['Focal-plane measurement errors']['Subtotal']),
+						'Opto-mechanical errors': math.sqrt(sigma_field['Opto-mechanical errors']['Subtotal']*sigma_field['Opto-mechanical errors']['Subtotal']),
+						'Atmospheric refraction errors': math.sqrt(sigma_field['Atmospheric refraction errors']['Subtotal']*sigma_field['Atmospheric refraction errors']['Subtotal']),
+						'Residual turbulence errors':math.sqrt(sigma_field['Residual turbulence errors']['Subtotal']*sigma_field['Residual turbulence errors']['Subtotal']),
+						'Pixel coordinate error': math.sqrt(pixel_error*pixel_error),
+						'Total plate scale error': math.sqrt(sigma_ref['Reference obj n catalog errors']['Subtotal']*sigma_ref['Reference obj n catalog errors']['Subtotal']),
+						'Astrometry error': math.sqrt(astrometry_error*astrometry_error)}
 
 	return error_subtotals
