@@ -1108,7 +1108,7 @@ def update_figure(n_clicks,wavelength,SNR_sci,SNR_fie,SNR_ref,rNGS,rref,T,dt,Nsc
     RefObjNCatErr['Position errors'] = pos_err
     RefObjNCatErr['Aberration grav deflection'] = ab_grav
     RefObjNCatErr['Other'] = other
-    x_arr=np.arange(SNR_sci-5,SNR_sci+5,1)
+    x_arr=np.arange(SNR_sci-2,SNR_sci+2,1)
     y_arr=[]
     for x in x_arr:
                 global_inputs['SNR_sci'] = f(x,T)
