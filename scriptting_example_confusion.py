@@ -22,9 +22,9 @@ error = np.zeros(Confusion.shape)
 field['NSci'] = 1
 field['Nref']=10000
 field['Nfield']=10000
-global_inputs['SNR-sci-id']=200
-global_inputs['SNR-fie-id']=100
-global_inputs['SNR-ref-id']=250
+global_inputs['SNR-sci']=200
+global_inputs['SNR_fie']=100
+global_inputs['SNR_ref']=250
 global_inputs['wavelength-id']='K'
 
 for k in Confusion:
