@@ -1048,19 +1048,39 @@ def update_figure(n_clicks,wavelength,Mag_sci,Mag_fie,Mag_ref,rNGS,rref,T,dt,Nsc
 
     if wavelength==0.000000928:
                 arr_Zbb=np.loadtxt('Zbb.csv',delimiter=',')
-                f = interpolate.interp2d(arr_Zbb[:,0],arr_Zbb[:,1],arr_Zbb[:,2], kind='cubic')
+                X = arr_Zbb[0::36,0]
+                Y = arr_Zbb[0:36,1]
+                Z = np.reshape(arr_Zbb[:,2], (100,36))
+                f= interpolate.RectBivariateSpline(X,Y,Z)  
+                # f = interpolate.interp2d(arr_Zbb[:,0],arr_Zbb[:,1],arr_Zbb[:,2], kind='cubic')
     elif wavelength==0.00000109:
                 arr_Ybb=np.loadtxt('Ybb.csv',delimiter=',')
-                f = interpolate.interp2d(arr_Ybb[:,0],arr_Ybb[:,1],arr_Ybb[:,2], kind='cubic')          
+                X = arr_Ybb[0::36,0]
+                Y = arr_Ybb[0:36,1]
+                Z = np.reshape(arr_Ybb[:,2], (100,36))
+                f= interpolate.RectBivariateSpline(X,Y,Z)  
+                # f = interpolate.interp2d(arr_Ybb[:,0],arr_Ybb[:,1],arr_Ybb[:,2], kind='cubic')          
     elif wavelength==0.00000127:
                 arr_Jbb=np.loadtxt('Jbb.csv',delimiter=',')
-                f= interpolate.interp2d(arr_Jbb[:,0],arr_Jbb[:,1],arr_Jbb[:,2], kind='cubic')           
+                X = arr_Jbb[0::36,0]
+                Y = arr_Jbb[0:36,1]
+                Z = np.reshape(arr_Jbb[:,2], (100,36))
+                f = interpolate.RectBivariateSpline(X,Y,Z)  
+                # f= interpolate.interp2d(arr_Jbb[:,0],arr_Jbb[:,1],arr_Jbb[:,2], kind='cubic')           
     elif wavelength==0.000001629:
                 arr_Hbb=np.loadtxt('Hbb.csv',delimiter=',')
-                f = interpolate.interp2d(arr_Hbb[:,0],arr_Hbb[:,1],arr_Hbb[:,2], kind='cubic')          
+                X = arr_Hbb[0::36,0]
+                Y = arr_Hbb[0:36,1]
+                Z = np.reshape(arr_Hbb[:,2], (100,36))
+                f = interpolate.RectBivariateSpline(X,Y,Z)  
+                # f = interpolate.interp2d(arr_Hbb[:,0],arr_Hbb[:,1],arr_Hbb[:,2], kind='cubic')          
     else:
                 arr_Kbb=np.loadtxt('Kbb.csv',delimiter=',')
-                f= interpolate.interp2d(arr_Kbb[:,0],arr_Kbb[:,1],arr_Kbb[:,2], kind='cubic')   
+                X = arr_Kbb[0::36,0]
+                Y = arr_Kbb[0:36,1]
+                Z = np.reshape(arr_Kbb[:,2], (100,36))
+                f = interpolate.RectBivariateSpline(X,Y,Z)  
+                # f= interpolate.interp2d(arr_Kbb[:,0],arr_Kbb[:,1],arr_Kbb[:,2], kind='cubic')   
 
     global_inputs['wavelength'] = wavelength
     global_inputs['SNR_sci'] = f(Mag_sci,T)
