@@ -16,11 +16,9 @@ TMT astrometry tool in python
 - >> error_all = Error_calculator(global_inputs,field,sigma_sci,sigma_NGS,RefObjNCatErr,'Absolute Astrometry')
 # Tasks remaining
 - Add a input file upload, output download feature
-- Add way to operate the calculator by command line.
 # Issues
-- speed up interpolation for graphs.
 - Use data set for a wider range to got from magnitude/ exposure time to SNR.
-- track why python datatype in dictionary is changing from float to array.
+
 
 
 
