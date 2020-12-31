@@ -14,6 +14,7 @@ def diff_fie(global_inputs,field,sigma_sci,sigma_field,sigma_ref,sigma_NGS):
 	# NGS position error for ref stars less than 3
 	if field['Nref'] < 3:
 		sigma_field['Opto-mechanical errors']['NGS position errors'] = sigma_NGS['Opto-mechanical errors']['NGS position errors']*field['rref-sci']/global_inputs['rngs']
+		
 	# ref stars 3 or more
 	if field['Nref'] >=3:
 		sigma_field['Opto-mechanical errors']['NGS Position errors'] = 0

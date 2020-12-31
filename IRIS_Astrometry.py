@@ -175,7 +175,7 @@ app.layout = html.Div(children=[
                 ),
             # input tab
         html.Div([
-        dcc.Input(id='SNR-sci-id', value = 20, type='number',
+        dcc.Input(id='Mag-sci-id', value = 20, type='number',
                   style={'textAlign': 'center','margin-left': '100px','width':'50%'}),
                  ]),      
                   
@@ -186,7 +186,7 @@ app.layout = html.Div(children=[
                 ),
             # input tab
         html.Div([
-        dcc.Input(id='SNR-fie-id', value = 20, type='number',
+        dcc.Input(id='Mag-fie-id', value = 20, type='number',
                   style={'textAlign': 'center','margin-left': '100px','width':'50%'}),
                  ]),
 
@@ -197,7 +197,7 @@ app.layout = html.Div(children=[
                 ),
             # input tab
         html.Div([
-        dcc.Input(id='SNR-ref-id', value = 20, type='number',
+        dcc.Input(id='Mag-ref-id', value = 20, type='number',
                   style={'textAlign': 'center','margin-left': '100px','width':'50%'}),
                  ]),
                         ## r ref-sci input input
@@ -866,9 +866,9 @@ For more details on the Engineering and the other Input values, please refer to 
 @app.callback(Output('final_output-id', 'children'),
     [Input(component_id='Calculate', component_property='n_clicks')],
     [State(component_id='wavelength-id', component_property='value'),
-    State(component_id='SNR-sci-id', component_property='value'),
-    State(component_id='SNR-fie-id', component_property='value'),
-    State(component_id='SNR-ref-id', component_property='value'),
+    State(component_id='Mag-sci-id', component_property='value'),
+    State(component_id='Mag-fie-id', component_property='value'),
+    State(component_id='Mag-ref-id', component_property='value'),
     State(component_id='RNGS-id', component_property='value'),
     State(component_id='rref-id', component_property='value'),
     State(component_id='T-id', component_property='value'),
@@ -912,7 +912,7 @@ For more details on the Engineering and the other Input values, please refer to 
 #    return 'You have selected "{}"'.format(value)
 
 
-def update_output_div(n_clicks,wavelength,SNR_sci,SNR_fie,SNR_ref,rNGS,rref,T,dt,Nsci,Nfield,Nref,Nngs,rref_sci,rdsci,Ncal,pix_blur,pix_irr,dect_non,PSF,confusion,NGS_perr,IRIS_opt,IRIS_surf,
+def update_output_div(n_clicks,wavelength,Mag_sci,Mag_fie,Mag_ref,rNGS,rref,T,dt,Nsci,Nfield,Nref,Nngs,rref_sci,rdsci,Ncal,pix_blur,pix_irr,dect_non,PSF,confusion,NGS_perr,IRIS_opt,IRIS_surf,
                         quasi_stat,tel_opt,rot_err,act_spike,vib,coup_atm,diff_ref,disp_obj,disp_atm,disp_adc,disp_var,halo,turb_var,pos_err,ab_grav,other,astrometry_type):
     # The variables are already imported from input.py. Update the variables the are fed from the UI
     
@@ -933,9 +933,9 @@ def update_output_div(n_clicks,wavelength,SNR_sci,SNR_fie,SNR_ref,rNGS,rref,T,dt
                 f= interpolate.interp2d(arr_Kbb[:,0],arr_Kbb[:,1],arr_Kbb[:,2], kind='linear')                                                          
 
     global_inputs['wavelength'] = wavelength
-    global_inputs['SNR_sci'] = f(SNR_sci,T)
-    global_inputs['SNR_fie'] = f(SNR_fie,T)
-    global_inputs['SNR_ref'] = f(SNR_ref,T)
+    global_inputs['SNR_sci'] = f(Mag_sci,T)
+    global_inputs['SNR_fie'] = f(Mag_fie,T)
+    global_inputs['SNR_ref'] = f(Mag_ref,T)
     global_inputs['rngs'] = rNGS
     global_inputs['rref'] = rref
     global_inputs['T'] = T
@@ -1001,9 +1001,9 @@ def update_output_div(n_clicks,wavelength,SNR_sci,SNR_fie,SNR_ref,rNGS,rref,T,dt
 @app.callback(Output(component_id='example-graph', component_property='figure'),
     [Input(component_id='Calculate', component_property='n_clicks')],
     [State(component_id='wavelength-id', component_property='value'),
-    State(component_id='SNR-sci-id', component_property='value'),
-    State(component_id='SNR-fie-id', component_property='value'),
-    State(component_id='SNR-ref-id', component_property='value'),
+    State(component_id='Mag-sci-id', component_property='value'),
+    State(component_id='Mag-fie-id', component_property='value'),
+    State(component_id='Mag-ref-id', component_property='value'),
     State(component_id='RNGS-id', component_property='value'),
     State(component_id='rref-id', component_property='value'),
     State(component_id='T-id', component_property='value'),
@@ -1043,7 +1043,7 @@ def update_output_div(n_clicks,wavelength,SNR_sci,SNR_fie,SNR_ref,rNGS,rref,T,dt
     ]
 )
 
-def update_figure(n_clicks,wavelength,SNR_sci,SNR_fie,SNR_ref,rNGS,rref,T,dt,Nsci,Nfield,Nref,Nngs,rref_sci,rdsci,Ncal,pix_blur,pix_irr,dect_non,PSF,confusion,NGS_perr,IRIS_opt,IRIS_surf,
+def update_figure(n_clicks,wavelength,Mag_sci,Mag_fie,Mag_ref,rNGS,rref,T,dt,Nsci,Nfield,Nref,Nngs,rref_sci,rdsci,Ncal,pix_blur,pix_irr,dect_non,PSF,confusion,NGS_perr,IRIS_opt,IRIS_surf,
                         quasi_stat,tel_opt,rot_err,act_spike,vib,coup_atm,diff_ref,disp_obj,disp_atm,disp_adc,disp_var,halo,turb_var,pos_err,ab_grav,other,astrometry_type):
 
     if wavelength==0.000000928:
@@ -1063,9 +1063,9 @@ def update_figure(n_clicks,wavelength,SNR_sci,SNR_fie,SNR_ref,rNGS,rref,T,dt,Nsc
                 f= interpolate.interp2d(arr_Kbb[:,0],arr_Kbb[:,1],arr_Kbb[:,2], kind='cubic')   
 
     global_inputs['wavelength'] = wavelength
-    global_inputs['SNR_sci'] = f(SNR_sci,T)
-    global_inputs['SNR_fie'] = f(SNR_fie,T)
-    global_inputs['SNR_ref'] = f(SNR_ref,T)
+    global_inputs['SNR_sci'] = f(Mag_sci,T)
+    global_inputs['SNR_fie'] = f(Mag_fie,T)
+    global_inputs['SNR_ref'] = f(Mag_ref,T)
     global_inputs['rngs'] = rNGS
     global_inputs['rref'] = rref
     global_inputs['T'] = T
@@ -1108,7 +1108,7 @@ def update_figure(n_clicks,wavelength,SNR_sci,SNR_fie,SNR_ref,rNGS,rref,T,dt,Nsc
     RefObjNCatErr['Position errors'] = pos_err
     RefObjNCatErr['Aberration grav deflection'] = ab_grav
     RefObjNCatErr['Other'] = other
-    x_arr=np.arange(SNR_sci-2,SNR_sci+2,1)
+    x_arr=np.arange(Mag_sci-2,Mag_sci+2,1)
     y_arr=[]
     for x in x_arr:
                 global_inputs['SNR_sci'] = f(x,T)

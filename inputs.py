@@ -10,15 +10,15 @@ global_inputs = {
 "rngs" : 50,
 "rref" : 17,
 "T" : 100,
-"dt_epoch" : 1.5}
+"dt_epoch" : 1.0}
 
 field = {
 "Nref" : 7,
-"rsep" : 0, # old spreadsheet
+"rsep" : 0, # not used old spreadsheet 
 "Nfield" : 100,
 "Nsci" : 1,
 "Nngs": 3,
-"rref-sci":10,
+"rref-sci":10, # old spreadsheet rsep
 "rdref": 1} # should be labelled rdsci
 
 sigma_sci = {'Focal-plane measurement errors':{

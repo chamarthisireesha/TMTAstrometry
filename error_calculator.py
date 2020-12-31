@@ -39,6 +39,10 @@ def Error_calculator(global_inputs,field,sigma_sci,sigma_NGS,RefObjNCatErr,astro
 	else:
 		print('No option selected. Something went wrong')
 	# print(error)
+
+	for key in error: 
+		error[key] = round(error[key], 2) 
+
 	return error
 
 
