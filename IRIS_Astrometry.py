@@ -13,7 +13,7 @@ from error_calculator import Error_calculator
 import plotly.graph_objs as go
 import numpy as np
 import dash_bootstrap_components as dbc
-from scipy import interpolate
+# from scipy import interpolate
 
 
 
@@ -810,7 +810,11 @@ For more details on the Engineering and the other Input values, please refer to 
 > * The astrometric error budget functions use SNR in ref. 1. For magnitude vs astrometric precision plots we convert magnitude and exposure time to SNR.  The conversion of magnitude to SNR is done using [exposure time calculator](https://www.tmt.org/etc/iris).
 
 > #### **Reference**
-> 1. M. Schock, B. Ellerbroek, et al.,"TMT Top Down Astrometry Error Budget", TMT internal report TMT.AOS.TEC.12.039.DRF03, Thirty Meter Telescope, 2014             
+> 1. M. Schock, B. Ellerbroek, et al.,"TMT Top Down Astrometry Error Budget", TMT internal report TMT.AOS.TEC.12.039.DRF03, Thirty Meter Telescope, 2014 
+
+> #### **Acknowledgement**
+
+> This project was part of the TMT Early-Career Initiative (TECI), led by the Institute for Scientist & Engineer Educators, and funded by the TMT Project Office in Pasadena, California. [TMT Early-Career Initiative (TECI)](https://isee-telescope-workforce.org/teci-workshop/)            
 
 '''),  
                        
@@ -915,27 +919,14 @@ For more details on the Engineering and the other Input values, please refer to 
 def update_output_div(n_clicks,wavelength,Mag_sci,Mag_fie,Mag_ref,rNGS,rref,T,dt,Nsci,Nfield,Nref,Nngs,rref_sci,rdsci,Ncal,pix_blur,pix_irr,dect_non,PSF,confusion,NGS_perr,IRIS_opt,IRIS_surf,
                         quasi_stat,tel_opt,rot_err,act_spike,vib,coup_atm,diff_ref,disp_obj,disp_atm,disp_adc,disp_var,halo,turb_var,pos_err,ab_grav,other,astrometry_type):
     # The variables are already imported from input.py. Update the variables the are fed from the UI
-    
-    if wavelength==0.000000928:
-                arr_Zbb=np.loadtxt('Zbb.csv',delimiter=',')
-                f = interpolate.interp2d(arr_Zbb[:,0],arr_Zbb[:,1],arr_Zbb[:,2], kind='linear')
-    elif wavelength==0.00000109:
-                arr_Ybb=np.loadtxt('Ybb.csv',delimiter=',')
-                f = interpolate.interp2d(arr_Ybb[:,0],arr_Ybb[:,1],arr_Ybb[:,2], kind='linear')         
-    elif wavelength==0.00000127:
-                arr_Jbb=np.loadtxt('Jbb.csv',delimiter=',')
-                f= interpolate.interp2d(arr_Jbb[:,0],arr_Jbb[:,1],arr_Jbb[:,2], kind='linear')          
-    elif wavelength==0.000001629:
-                arr_Hbb=np.loadtxt('Hbb.csv',delimiter=',')
-                f = interpolate.interp2d(arr_Hbb[:,0],arr_Hbb[:,1],arr_Hbb[:,2], kind='linear')         
-    else:
-                arr_Kbb=np.loadtxt('Kbb.csv',delimiter=',')
-                f= interpolate.interp2d(arr_Kbb[:,0],arr_Kbb[:,1],arr_Kbb[:,2], kind='linear')                                                          
+                                                  
 
     global_inputs['wavelength'] = wavelength
-    global_inputs['SNR_sci'] = f(Mag_sci,T)
-    global_inputs['SNR_fie'] = f(Mag_fie,T)
-    global_inputs['SNR_ref'] = f(Mag_ref,T)
+
+    global_inputs['Mag_sci'] = Mag_sci
+    global_inputs['Mag_fie'] = Mag_fie
+    global_inputs['Mag_ref'] = Mag_ref
+
     global_inputs['rngs'] = rNGS
     global_inputs['rref'] = rref
     global_inputs['T'] = T
@@ -1044,48 +1035,14 @@ def update_output_div(n_clicks,wavelength,Mag_sci,Mag_fie,Mag_ref,rNGS,rref,T,dt
 )
 
 def update_figure(n_clicks,wavelength,Mag_sci,Mag_fie,Mag_ref,rNGS,rref,T,dt,Nsci,Nfield,Nref,Nngs,rref_sci,rdsci,Ncal,pix_blur,pix_irr,dect_non,PSF,confusion,NGS_perr,IRIS_opt,IRIS_surf,
-                        quasi_stat,tel_opt,rot_err,act_spike,vib,coup_atm,diff_ref,disp_obj,disp_atm,disp_adc,disp_var,halo,turb_var,pos_err,ab_grav,other,astrometry_type):
-
-    if wavelength==0.000000928:
-                arr_Zbb=np.loadtxt('Zbb.csv',delimiter=',')
-                X = arr_Zbb[0::36,0]
-                Y = arr_Zbb[0:36,1]
-                Z = np.reshape(arr_Zbb[:,2], (100,36))
-                f= interpolate.RectBivariateSpline(X,Y,Z)  
-                # f = interpolate.interp2d(arr_Zbb[:,0],arr_Zbb[:,1],arr_Zbb[:,2], kind='cubic')
-    elif wavelength==0.00000109:
-                arr_Ybb=np.loadtxt('Ybb.csv',delimiter=',')
-                X = arr_Ybb[0::36,0]
-                Y = arr_Ybb[0:36,1]
-                Z = np.reshape(arr_Ybb[:,2], (100,36))
-                f= interpolate.RectBivariateSpline(X,Y,Z)  
-                # f = interpolate.interp2d(arr_Ybb[:,0],arr_Ybb[:,1],arr_Ybb[:,2], kind='cubic')          
-    elif wavelength==0.00000127:
-                arr_Jbb=np.loadtxt('Jbb.csv',delimiter=',')
-                X = arr_Jbb[0::36,0]
-                Y = arr_Jbb[0:36,1]
-                Z = np.reshape(arr_Jbb[:,2], (100,36))
-                f = interpolate.RectBivariateSpline(X,Y,Z)  
-                # f= interpolate.interp2d(arr_Jbb[:,0],arr_Jbb[:,1],arr_Jbb[:,2], kind='cubic')           
-    elif wavelength==0.000001629:
-                arr_Hbb=np.loadtxt('Hbb.csv',delimiter=',')
-                X = arr_Hbb[0::36,0]
-                Y = arr_Hbb[0:36,1]
-                Z = np.reshape(arr_Hbb[:,2], (100,36))
-                f = interpolate.RectBivariateSpline(X,Y,Z)  
-                # f = interpolate.interp2d(arr_Hbb[:,0],arr_Hbb[:,1],arr_Hbb[:,2], kind='cubic')          
-    else:
-                arr_Kbb=np.loadtxt('Kbb.csv',delimiter=',')
-                X = arr_Kbb[0::36,0]
-                Y = arr_Kbb[0:36,1]
-                Z = np.reshape(arr_Kbb[:,2], (100,36))
-                f = interpolate.RectBivariateSpline(X,Y,Z)  
-                # f= interpolate.interp2d(arr_Kbb[:,0],arr_Kbb[:,1],arr_Kbb[:,2], kind='cubic')   
+                        quasi_stat,tel_opt,rot_err,act_spike,vib,coup_atm,diff_ref,disp_obj,disp_atm,disp_adc,disp_var,halo,turb_var,pos_err,ab_grav,other,astrometry_type):  
 
     global_inputs['wavelength'] = wavelength
-    global_inputs['SNR_sci'] = f(Mag_sci,T)
-    global_inputs['SNR_fie'] = f(Mag_fie,T)
-    global_inputs['SNR_ref'] = f(Mag_ref,T)
+
+    global_inputs['Mag_sci'] = Mag_sci
+    global_inputs['Mag_fie'] = Mag_fie
+    global_inputs['Mag_ref'] = Mag_ref
+
     global_inputs['rngs'] = rNGS
     global_inputs['rref'] = rref
     global_inputs['T'] = T
@@ -1131,7 +1088,8 @@ def update_figure(n_clicks,wavelength,Mag_sci,Mag_fie,Mag_ref,rNGS,rref,T,dt,Nsc
     x_arr=np.arange(Mag_sci-2,Mag_sci+2,1)
     y_arr=[]
     for x in x_arr:
-                global_inputs['SNR_sci'] = f(x,T)
+                global_inputs['Mag_sci'] = x
+                # global_inputs['SNR_sci'] = f(x,T)
                 # print x,T,f(x,T)
                 err=Error_calculator(global_inputs,field,sigma_sci,sigma_NGS,RefObjNCatErr,astrometry_type)
                 # if astrometry_type == 'Differential astrometry (relative to field stars)':
